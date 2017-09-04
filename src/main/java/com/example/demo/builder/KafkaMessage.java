@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,22 +28,22 @@ public class KafkaMessage<T> {
   private ZonedDateTime time;
 
   @NotNull
-  private final String type;
+  private final Integer version;
 
   @NotNull
   @Valid
-  private final KafkaPayload<T> payload;
+  @JsonUnwrapped
+  private final T message;
 
 
   public KafkaMessage(@JsonProperty("id") final UUID id, @JsonProperty("key") final String key,
-                      @JsonProperty("time") final ZonedDateTime time, @JsonProperty("type") final String type,
-                      @JsonProperty("payload") final KafkaPayload<T> payload) {
+                      @JsonProperty("payload") final T payload, Integer version) {
 
     this.id = id;
     this.key = key;
-    this.time = time;
-    this.type = type;
-    this.payload = payload;
+    this.version = version;
+    this.time = ZonedDateTime.now(ZoneOffset.UTC);
+    this.message = payload;
   }
 
 
@@ -60,14 +62,9 @@ public class KafkaMessage<T> {
     return time;
   }
 
-  public String getType() {
+  public T getPayload() {
 
-    return type;
-  }
-
-  public KafkaPayload<T> getPayload() {
-
-    return payload;
+    return message;
   }
 
   @Override
@@ -77,8 +74,7 @@ public class KafkaMessage<T> {
         "id=" + id +
         ", key='" + key + '\'' +
         ", time=" + time +
-        ", type='" + type + '\'' +
-        ", payload=" + payload +
+        ", payload=" + message +
         '}';
   }
 
@@ -95,13 +91,12 @@ public class KafkaMessage<T> {
     return Objects.equals(id, that.id) &&
         Objects.equals(key, that.key) &&
         Objects.equals(time, that.time) &&
-        Objects.equals(type, that.type) &&
-        Objects.equals(payload, that.payload);
+        Objects.equals(message, that.message);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(id, key, time, type, payload);
+    return Objects.hash(id, key, time, message);
   }
 }

@@ -2,10 +2,8 @@ package com.example.demo.builder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-/**
- * Created by georgi.peychev on 9/4/17.
- */
-public class PublishFailedException extends Throwable {
+
+public class PublishFailedException extends RuntimeException {
 
   public PublishFailedException(String s, JsonProcessingException e) {
 

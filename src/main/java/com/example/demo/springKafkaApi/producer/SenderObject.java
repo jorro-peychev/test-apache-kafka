@@ -2,7 +2,7 @@ package com.example.demo.springKafkaApi.producer;
 
 
 import com.example.demo.Command;
-import com.example.demo.builder.KafkaProducer;
+import com.example.demo.builder.KafkaSender;
 import com.example.demo.builder.PublishFailedException;
 import com.example.demo.domain.Foo;
 import org.slf4j.Logger;
@@ -14,10 +14,10 @@ public class SenderObject implements Command {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SenderObject.class);
 
-  private KafkaProducer kafkaProducer;
+  private KafkaSender kafkaProducer;
 
 
-  public SenderObject(KafkaProducer kafkaProducer) {
+  public SenderObject(KafkaSender kafkaProducer) {
 
     this.kafkaProducer = kafkaProducer;
   }
