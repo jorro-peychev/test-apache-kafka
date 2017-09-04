@@ -24,13 +24,13 @@ public class KafkaSender {
 
     LOG.debug("publishing message {}, {}, {}", topic, type, payload);
 
-    final KafkaMessage<T> message = new KafkaMessage<>(UUID.randomUUID(), key, payload, kafkaVersion);
+    final KafkaMessageWrapper<T> message = new KafkaMessageWrapper<>(UUID.randomUUID(), key, payload, kafkaVersion);
     String jsonMessage;
     try {
       jsonMessage = objectMapper.writeValueAsString(message);
     }
     catch (final JsonProcessingException e) {
-      throw new PublishFailedException("Failed to send message on Kafka queue, mapping of KafkaMessage to JSON failed.", e);
+      throw new PublishFailedException("Failed to send message on Kafka queue, mapping of KafkaMessageWrapper to JSON failed.", e);
     }
     kafkaTemplate.send(topic, message.getKey(), jsonMessage).addCallback(
         stringStringSendResult -> LOG.info("Successfully sent on topic '{}' message: {}", topic, jsonMessage),

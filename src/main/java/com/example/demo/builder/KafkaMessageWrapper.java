@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class KafkaMessage<T> {
+public class KafkaMessageWrapper<T> {
 
   @NotNull
   private final UUID id;
@@ -36,8 +36,8 @@ public class KafkaMessage<T> {
   private final T message;
 
 
-  public KafkaMessage(@JsonProperty("id") final UUID id, @JsonProperty("key") final String key,
-                      @JsonProperty("payload") final T payload, Integer version) {
+  public KafkaMessageWrapper(@JsonProperty("id") final UUID id, @JsonProperty("key") final String key,
+                             @JsonProperty("payload") final T payload, Integer version) {
 
     this.id = id;
     this.key = key;
@@ -70,33 +70,11 @@ public class KafkaMessage<T> {
   @Override
   public String toString() {
 
-    return "KafkaMessage{" +
+    return "KafkaMessageWrapper{" +
         "id=" + id +
         ", key='" + key + '\'' +
         ", time=" + time +
         ", payload=" + message +
         '}';
-  }
-
-  @Override
-  public boolean equals(Object o) {
-
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    KafkaMessage<?> that = (KafkaMessage<?>) o;
-    return Objects.equals(id, that.id) &&
-        Objects.equals(key, that.key) &&
-        Objects.equals(time, that.time) &&
-        Objects.equals(message, that.message);
-  }
-
-  @Override
-  public int hashCode() {
-
-    return Objects.hash(id, key, time, message);
   }
 }
